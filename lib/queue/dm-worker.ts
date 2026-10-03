@@ -5,7 +5,7 @@ import {
   isDeliveryUnconfirmed,
 } from "@/lib/instagram/delivery-errors";
 import { claimCommentDelivery, MAX_COMMENT_SEND_ATTEMPTS } from "./comment-delivery";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { UnrecoverableError, Worker, type Job } from "bullmq";
 import {
   getDMQueue,
@@ -852,7 +852,7 @@ async function sendFollowRecheckAck({
     await sendPostbackOnce({
       // Its own id: the tap's id is claimed later by the link or prompt that
       // the re-check sends, and claiming it here would suppress that message.
-      operationId: operationId ? `${operationId}:ack` : null,
+      operationId: operationId ? `${operationId}:ack` : randomUUID(),
       send: () =>
         sendDirectMessage({ context, instagramAccountId, userId, message }),
     });
